@@ -1,14 +1,15 @@
-import {GameContext} from "./game-context.ts";
+import {GameCanvas} from "./game-canvas.ts";
 
 export class GameObject {
     static id = 0
     public children: GameObject[] = [];
     public parent: GameObject | null = null;
     id: number
-    private ctx: GameContext | null = null;
+    public ctx: GameCanvas
 
-    constructor(private ctx?: GameContext | null) {
-        this.ctx = ctx || new GameContext();
+
+    constructor() {
+        this.ctx = GameCanvas.getInstance();
         this.id = GameObject.id;
         GameObject.id++
     }

@@ -1,5 +1,6 @@
 import './style.css'
 import {Scene} from "./scene.ts";
+import {GameCanvas} from "./game-canvas.ts";
 
 const setupCanvas = () => {
     document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
@@ -12,6 +13,8 @@ const setupCanvas = () => {
 
 function main() {
     setupCanvas()
+    const canvas = document.querySelector('.app')! as HTMLCanvasElement;
+    GameCanvas.new(canvas);
     const scene = new Scene()
     scene.init()
     const loop = () => {
