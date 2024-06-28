@@ -55,7 +55,7 @@ const TetrominoeColorMapp =  Map<TetrominoeType, Color> = new Map([
      [TetrominoeType.leftL,  Color.from('navy')],
       [TetrominoeType.rightL,  Color.from('darkgoldenrod')],
      [TetrominoeType.leftZ,  Color.from('lime')],
-     [TetrominoeType.rightZ,  Color.from('chartreuse')],
+     [TetrominoeType.rightZ,  Color.from('red')],
      [TetrominoeType.soil, Color.from('purple')],
 ])
 
