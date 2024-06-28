@@ -17,7 +17,6 @@ export class GameObject {
     addChild(child: GameObject) {
         child.parent = this;
         this.children.push(child);
-
     }
 
     destory() {

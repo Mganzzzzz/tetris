@@ -75,8 +75,5 @@ button:focus-visible {
 }
 
 .app {
-  margin: 0 auto;
-  width: 300px;
-  height: 600px;
   border: 1px solid white;
 }

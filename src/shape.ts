@@ -1,4 +1,5 @@
 import {GameObject} from "./game-object.ts";
+import {Color} from "./color.ts";
 
 export class Shape extends GameObject {
 
@@ -7,6 +8,6 @@ export class Shape extends GameObject {
     }
 
     draw() {
-        this.ctx.drawRect(this.x, this.y, this.width, this.height);
+        this.ctx.drawRect(this.x, this.y, this.width, this.height, );
     }
 }

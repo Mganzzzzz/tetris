@@ -1,12 +1,23 @@
 import {GameObject} from "./game-object.ts";
-import {Shape} from "./shape.ts";
+import {Tetromino} from "./tetromino.ts";
+import {TetrominoeType} from "./enums.ts";
 
 export class Scene extends GameObject {
-    root: GameObject|null = null;
+    root: GameObject | null = null;
+
     init() {
         this.root = new GameObject()
-        const s = new Shape(10, 10, 20, 20)
-        this.root.addChild(s)
+        // const s = new Mosaic(10, 10)
+        const objs = [
+            new Tetromino(0, 0, TetrominoeType.line),
+            new Tetromino(0, 1, TetrominoeType.square),
+            new Tetromino(0, 3, TetrominoeType.leftZ),
+            new Tetromino(0, 5, TetrominoeType.rightZ),
+            new Tetromino(0, 9, TetrominoeType.leftL),
+            new Tetromino(0, 11, TetrominoeType.rightL),
+            new Tetromino(0, 14, TetrominoeType.soil),
+        ]
+        objs.forEach(n => this.root?.addChild(n))
     }
 
     update() {

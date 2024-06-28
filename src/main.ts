@@ -5,7 +5,7 @@ import {GameCanvas} from "./game-canvas.ts";
 const setupCanvas = () => {
     document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
   <div>
-    <canvas class="app"></canvas>
+    <canvas class="app" width="300" height="600"></canvas>
   </div>
 `
 

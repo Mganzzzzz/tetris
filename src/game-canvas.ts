@@ -12,7 +12,7 @@ export class GameCanvas implements GameCanvas {
     public canvas: HTMLCanvasElement;
     public context2d: CanvasRenderingContext2D;
 
-   private constructor(canvas: HTMLCanvasElement) {
+    private constructor(canvas: HTMLCanvasElement) {
 
         this.canvas = canvas
         this.context2d = this.canvas.getContext("2d")!;
@@ -31,6 +31,17 @@ export class GameCanvas implements GameCanvas {
                 this.setColor(color)
             }
             this.context2d.fillRect(x, y, width, height);
+            this.context2d.fillStyle = t
+        }
+    }
+
+    drawBorder(x: number, y: number, width: number, height: number, color?: Color) {
+        if (this.context2d) {
+            const t = this.context2d.fillStyle
+            if (color) {
+                this.setColor(color)
+            }
+            this.context2d.strokeRect(x, y, width, height);
             this.context2d.fillStyle = t
         }
     }
