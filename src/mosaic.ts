@@ -3,18 +3,27 @@ import {Color} from "./color.ts";
 
 export class Mosaic extends Shape {
 
-    size: number = 10
+    static size: number = 20
 
     constructor(public indexX: number = 0, public indexY: number = 0, public color?: Color) {
         super();
-        this.height = this.size
-        this.width = this.size
-        this.x = this.indexX * this.size
-        this.y = this.indexY * this.size
+        const size = Mosaic.size
+        this.height = size
+        this.width = size
+        this.x = this.indexX * size
+        this.y = this.indexY * size
     }
+
+    update() {
+        super.update();
+        this.x = this.indexX * Mosaic.size
+        this.y = this.indexY * Mosaic.size
+    }
+
 
     draw() {
         this.ctx.drawRect(this.x, this.y, this.width, this.height, this.color);
-        this.ctx.drawBorder(this.x, this.y, this.width , this.height, this.color);
+        this.ctx.drawBorder(this.x, this.y, this.width, this.height, this.color);
+        // this.ctx.drawText( this.x + this.width/2, this.y+this.height/2,`${this.indexX}-${this.indexY}`);
     }
 }

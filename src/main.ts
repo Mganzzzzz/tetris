@@ -5,7 +5,7 @@ import {GameCanvas} from "./game-canvas.ts";
 const setupCanvas = () => {
     document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
   <div>
-    <canvas class="app" width="300" height="600"></canvas>
+    <canvas class="app" width="200" height="600"></canvas>
   </div>
 `
 
@@ -14,12 +14,13 @@ const setupCanvas = () => {
 function main() {
     setupCanvas()
     const canvas = document.querySelector('.app')! as HTMLCanvasElement;
-    GameCanvas.new(canvas);
+    const gameCanvas= GameCanvas.new(canvas);
     const scene = new Scene()
     scene.init()
     const loop = () => {
 
         requestAnimationFrame(() => {
+            gameCanvas.clean()
             scene.update()
             scene.draw()
             loop()

@@ -20,6 +20,10 @@ export class GameCanvas implements GameCanvas {
         GameCanvas.instance = this;
     }
 
+    clean() {
+        this.context2d.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    }
+
     setColor(color: Color): void {
         this.context2d.fillStyle = color.toValue()
     }
@@ -46,6 +50,11 @@ export class GameCanvas implements GameCanvas {
         }
     }
 
+    drawText(x: number, y: number, text: string, color?: Color) {
+        this.context2d.font = `10px ${color?.toValue() || ''}`;
+        this.context2d.fillText(text, x,y);
+    }
+
     static getInstance() {
         return GameCanvas.instance;
     }
@@ -54,6 +63,6 @@ export class GameCanvas implements GameCanvas {
         if (GameCanvas.instance) {
             return GameCanvas.instance
         }
-        new GameCanvas(canvas)
+        return new GameCanvas(canvas)
     }
 }

@@ -6,7 +6,7 @@ export class GameObject {
     public parent: GameObject | null = null;
     id: number
     public ctx: GameCanvas
-
+    lastTime = 0
 
     constructor() {
         this.ctx = GameCanvas.getInstance();

@@ -7,12 +7,12 @@ export enum Direction {
 }
 
 export enum TetrominoeType {
-    line,
-    square,
-    leftL,
-    rightL,
-    leftZ,
-    rightZ,
-    soil,
+    line='line',
+    square='square',
+    leftL='leftL',
+    rightL='rightL',
+    leftZ='leftZ',
+    rightZ='rightZ',
+    soil='soil',
 
 }
