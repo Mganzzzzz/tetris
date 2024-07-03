@@ -3,6 +3,7 @@ import {Mosaic} from "./mosaic.ts";
 import {Direction, TetrominoeType} from "./enums.ts";
 import {Color} from "./color.ts";
 import {GridMap} from "./grid-map.ts";
+import {GameEventType} from "./event.ts";
 
 const bitMapping: Map<TetrominoeType, number[]> = new Map([
     [TetrominoeType.line, [
@@ -128,6 +129,9 @@ export class Tetromino extends GameObject {
 
     init() {
         const bitMap = bitMapping.get(this.type)!
+        this.ctx.registerEvent(GameEventType.keyboard, (e) => {
+            console.log('debug e', e)
+        })
         bitMap.forEach((bit, index) => {
             if (bit) {
                 const x = Math.floor(index / 4)

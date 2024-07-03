@@ -1,5 +1,4 @@
 import {GameObject} from "./game-object.ts";
-import {Color} from "./color.ts";
 
 export class Shape extends GameObject {
 

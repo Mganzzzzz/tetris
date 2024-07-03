@@ -1,5 +1,6 @@
 import {Scene} from "./scene.ts";
 import {Color} from "./color.ts";
+import {GameEvent, GameEventType} from "./event.ts";
 
 export interface GameContext {
     canvas: HTMLCanvasElement;
@@ -11,6 +12,7 @@ export class GameCanvas implements GameCanvas {
 
     public canvas: HTMLCanvasElement;
     public context2d: CanvasRenderingContext2D;
+    public eventsMap= new Map<GameEventType, ((e:GameEvent) =>void)[]>()
 
     private constructor(canvas: HTMLCanvasElement) {
 
@@ -18,6 +20,8 @@ export class GameCanvas implements GameCanvas {
         this.context2d = this.canvas.getContext("2d")!;
         this.setColor(new Color('#fff'))
         GameCanvas.instance = this;
+        this.bindEvent()
+
     }
 
     clean() {
@@ -52,7 +56,7 @@ export class GameCanvas implements GameCanvas {
 
     drawText(x: number, y: number, text: string, color?: Color) {
         this.context2d.font = `10px ${color?.toValue() || ''}`;
-        this.context2d.fillText(text, x,y);
+        this.context2d.fillText(text, x, y);
     }
 
     static getInstance() {
@@ -64,5 +68,33 @@ export class GameCanvas implements GameCanvas {
             return GameCanvas.instance
         }
         return new GameCanvas(canvas)
+    }
+
+    bindEvent() {
+        window.addEventListener('keydown', (e) => {
+            this.triggerEvent(new GameEvent(GameEventType.keyboard, e))
+
+
+        })
+        if (this.canvas) {
+            this.canvas.addEventListener('click', (e) => {
+                this.triggerEvent(new GameEvent(GameEventType.mouse, e))
+            })
+        }
+    }
+
+    private triggerEvent(event: GameEvent) {
+        const cbs = this.eventsMap.get(event.type)
+        if (Array.isArray(cbs)) {
+            cbs.forEach(n => n(event))
+        }
+    }
+
+    registerEvent(type: GameEventType, cb: (e: GameEvent) => void) {
+        if(!this.eventsMap.get(type)) {
+            this.eventsMap.set(type, [])
+        }
+        const queue = this.eventsMap.get(type)!
+        queue.push(cb)
     }
 }
