@@ -1,6 +1,7 @@
 import {Scene} from "./scene.ts";
 import {Color} from "./color.ts";
-import {GameEvent, GameEventType} from "./event.ts";
+import {ClickEvent, GameEvent, GameEventType} from "./event.ts";
+import {Mosaic} from "./mosaic.ts";
 
 export interface GameContext {
     canvas: HTMLCanvasElement;
@@ -12,7 +13,7 @@ export class GameCanvas implements GameCanvas {
 
     public canvas: HTMLCanvasElement;
     public context2d: CanvasRenderingContext2D;
-    public eventsMap= new Map<GameEventType, ((e:GameEvent) =>void)[]>()
+    public eventsMap = new Map<GameEventType, ((e: GameEvent) => void)[]>()
 
     private constructor(canvas: HTMLCanvasElement) {
 
@@ -76,8 +77,18 @@ export class GameCanvas implements GameCanvas {
 
 
         })
+
         if (this.canvas) {
             this.canvas.addEventListener('click', (e) => {
+                this.triggerEvent(new GameEvent(GameEventType.mouse, e))
+            })
+              this.canvas.addEventListener('mousedown', (e) => {
+                this.triggerEvent(new GameEvent(GameEventType.mouse, e))
+            })
+              this.canvas.addEventListener('mouseup', (e) => {
+                this.triggerEvent(new GameEvent(GameEventType.mouse, e))
+            })
+              this.canvas.addEventListener('mouseleave', (e) => {
                 this.triggerEvent(new GameEvent(GameEventType.mouse, e))
             })
         }
@@ -91,7 +102,7 @@ export class GameCanvas implements GameCanvas {
     }
 
     registerEvent(type: GameEventType, cb: (e: GameEvent) => void) {
-        if(!this.eventsMap.get(type)) {
+        if (!this.eventsMap.get(type)) {
             this.eventsMap.set(type, [])
         }
         const queue = this.eventsMap.get(type)!

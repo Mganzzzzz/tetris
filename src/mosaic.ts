@@ -4,6 +4,7 @@ import {Color} from "./color.ts";
 export class Mosaic extends Shape {
 
     static size: number = 20
+    _lastColor: Color | undefined
 
     constructor(public indexX: number = 0, public indexY: number = 0, public color?: Color) {
         super();
@@ -12,6 +13,7 @@ export class Mosaic extends Shape {
         this.width = size
         this.x = this.indexX * size
         this.y = this.indexY * size
+
     }
 
     update() {
@@ -20,6 +22,17 @@ export class Mosaic extends Shape {
         this.y = this.indexY * Mosaic.size
     }
 
+    changeColor(color: Color) {
+        this._lastColor = this.color
+        this.color = color = color
+    }
+
+    revertColor() {
+        if (this._lastColor) {
+
+            this.color = this._lastColor
+        }
+    }
 
     draw() {
         this.ctx.drawRect(this.x, this.y, this.width, this.height, this.color);

@@ -130,7 +130,7 @@ export class Tetromino extends GameObject {
     init() {
         const bitMap = bitMapping.get(this.type)!
         this.ctx.registerEvent(GameEventType.keyboard, (e) => {
-            console.log('debug e', e)
+            // console.log('debug e', e)
         })
         bitMap.forEach((bit, index) => {
             if (bit) {

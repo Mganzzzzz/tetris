@@ -2,6 +2,8 @@ import {Mosaic} from "./mosaic.ts";
 import {GameObject} from "./game-object.ts";
 import {Scene} from "./scene.ts";
 import {Tetromino} from "./tetromino.ts";
+import {GameEventType} from "./event.ts";
+import {Color} from "./color.ts";
 
 export class GridMap extends GameObject {
     mosaicMap: Map<string, Mosaic | null> = new Map
@@ -26,14 +28,30 @@ export class GridMap extends GameObject {
                 this.mosaicMap.set(key, null)
             }
         }
+
+        this.ctx.registerEvent(GameEventType.mouse, (e) => {
+            const evt = e.source as PointerEvent
+            const {offsetX, offsetY} = evt
+            const {x, y} = this.getcoordinateByOffset(offsetX, offsetY)
+            const mosaic = this.mosaicMap.get(`${x}-${y}`)
+            if (mosaic) {
+                console.log('debug mosaic', mosaic)
+            }
+        })
+    }
+
+    getcoordinateByOffset(offsetX: number, offsetY: number) {
+        let x = Math.floor(offsetX / Mosaic.size)
+        let y = Math.floor(offsetY / Mosaic.size)
+        return {x, y}
     }
 
     update() {
 
         if (this.parent instanceof Scene) {
-                    this.mosaicMap.forEach((_, key) => {
-            this.mosaicMap.set(key, null)
-        })
+            this.mosaicMap.forEach((_, key) => {
+                this.mosaicMap.set(key, null)
+            })
             this.parent.children.forEach((child) => {
                 if (child instanceof Tetromino) {
                     this.updateMap(child.children)
