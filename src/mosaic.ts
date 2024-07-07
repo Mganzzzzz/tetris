@@ -1,9 +1,11 @@
 import {Shape} from "./shape.ts";
 import {Color} from "./color.ts";
+import {Tetromino} from "./tetromino.ts";
 
 export class Mosaic extends Shape {
 
     static size: number = 20
+    parent: Tetromino | null = null
     _lastColor: Color | undefined
 
     constructor(public indexX: number = 0, public indexY: number = 0, public color?: Color) {
@@ -11,15 +13,15 @@ export class Mosaic extends Shape {
         const size = Mosaic.size
         this.height = size
         this.width = size
-        this.x = this.indexX * size
-        this.y = this.indexY * size
-
     }
 
     update() {
         super.update();
-        this.x = this.indexX * Mosaic.size
-        this.y = this.indexY * Mosaic.size
+        const parent = this.parent
+        const parentIndexX = parent?.indexX || 0
+        const parentIndexY = parent?.indexY || 0
+        this.x = (parentIndexX + this.indexX) * Mosaic.size
+        this.y = (parentIndexY + this.indexY) * Mosaic.size
     }
 
     changeColor(color: Color) {

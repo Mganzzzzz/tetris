@@ -68,7 +68,12 @@ export class Tetromino extends GameObject {
     direction: Direction = Direction.up
     children: Mosaic[] = []
     onGround = false
-    private _mGridMap: GridMap | null = null
+    public _mGridMap: GridMap | null = null
+    active = false
+    public leftGrids: Mosaic[] = [];
+    public toBottom: boolean = false;
+    public toLeft: boolean = false;
+    public toRight: boolean = false;
 
     constructor(public indexX: number, public indexY: number, type: TetrominoeType = TetrominoeType.line) {
         super()
@@ -81,65 +86,107 @@ export class Tetromino extends GameObject {
         this._mGridMap = value;
     }
 
-    get bottom() {
-        this.children.sort((a, b) => {
+    getEdge(direction: Direction) {
+        const compareMapping = new Map([
+            [Direction.left, (a: Mosaic, b: Mosaic) => {
+                return a.indexX - b.indexX;
+            }],
+            [Direction.right, (a: Mosaic, b: Mosaic) => {
+                return b.indexX - a.indexX;
+            }],
+            [Direction.up, (a: Mosaic, b: Mosaic) => {
+                return a.indexY - b.indexY;
+            }],
+            [Direction.left, (a: Mosaic, b: Mosaic) => {
+                return b.indexY - a.indexY;
+            }]
+        ])
+        const compareFn = compareMapping.get(direction)!
+        const children = [...this.children]
+        children.sort(compareFn)
+        return children[0]
+    }
 
-            if (a.indexY > b.indexY) {
-                return 1
-            } else if (a.indexY > b.indexY) {
-                return -1
-            } else {
-                return 0
-            }
-        })
-        return this.children[0]
+
+    get left() {
+        return this.getEdge(Direction.left)
+    }
+
+    get right() {
+        return this.getEdge(Direction.right)
+    }
+
+    get bottom() {
+        return this.getEdge(Direction.down)
     }
 
 
     update() {
         super.update();
         this.detection()
-        if (this.onGround) {
-            return
+        if (!this.toBottom) {
+            this.indexY += 1
         }
-        this.indexY += 1
-        this.children.forEach((child) => {
-            child.indexY++
-        })
     }
 
     detection() {
-        if (this.children.some(n => {
-            const _mGridMap = this._mGridMap!
+        const mGridMap = this._mGridMap!
+        this.leftGrids = this.children.map((n => {
             const {indexX, indexY} = n
-            if (indexY + 1 === _mGridMap.height) {
-                return true
-            }
-            const nextGrid = _mGridMap.get(indexX, indexY + 1)
-            if (nextGrid && nextGrid.parent !== this) {
-                return true
-            }
-
-            return false
-        })) {
-            this.onGround = true
-        }
-
+            const grid = mGridMap.get(indexX, indexY + 1)
+            return grid
+        })).filter(m => m instanceof Mosaic)
+        this.toBottom = (this.bottom.indexY + this.indexY) === mGridMap.height - 1
+        this.toLeft = (this.left.indexX + this.indexX) === 0
+        this.toRight = (this.right.indexX + this.indexX) === mGridMap.width - 1
     }
 
     init() {
         const bitMap = bitMapping.get(this.type)!
-        this.ctx.registerEvent(GameEventType.keyboard, (e) => {
-            // console.log('debug e', e)
-        })
         bitMap.forEach((bit, index) => {
             if (bit) {
                 const x = Math.floor(index / 4)
                 const y = index - (x * 4)
                 const color = TetrominoeColorMapp.get(this.type)!
-                const m = new Mosaic(x + this.indexX, y + this.indexY, color)
+                const m = new Mosaic(x, y, color)
                 this.addChild(m)
                 this.mosaicsIndex.push(index)
+            }
+        })
+        this.bindEvent()
+    }
+
+    bindEvent() {
+        this.ctx.registerEvent(GameEventType.keyboard, (e) => {
+            const source = e.source as KeyboardEvent
+            const mapping = new Map([
+                ['ArrowUp', Direction.up],
+                ['ArrowDown', Direction.down],
+                ['ArrowLeft', Direction.left],
+                ['ArrowRight', Direction.right],
+            ])
+            const direction = mapping.get(source.key)
+            if (direction) {
+                const handlerMapping = new Map([
+                    [Direction.up, () => {
+                        //
+                    }],
+                    [Direction.down, () => {
+                        //
+                    }],
+                    [Direction.left, () => {
+                        if (!this.toLeft) {
+                            this.indexX--
+                        }
+                    }],
+                    [Direction.right, () => {
+                        if (!this.toRight) {
+                            this.indexX++
+                        }
+                    }],
+                ])
+                const handler = handlerMapping.get(direction)!
+                handler()
             }
         })
     }

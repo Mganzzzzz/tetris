@@ -11,12 +11,12 @@ export class Scene extends GameObject {
         this.addChild(m)
         const objs = [
             new Tetromino(0, 0, TetrominoeType.line),
-            new Tetromino(0, 20, TetrominoeType.square),
-            new Tetromino(0, 23, TetrominoeType.leftZ),
-            new Tetromino(2, 5, TetrominoeType.rightZ),
-            new Tetromino(0, 9, TetrominoeType.leftL),
-            new Tetromino(10, 11, TetrominoeType.rightL),
-            new Tetromino(0, 14, TetrominoeType.soil),
+            // new Tetromino(0, 20, TetrominoeType.square),
+            // new Tetromino(0, 23, TetrominoeType.leftZ),
+            // new Tetromino(2, 5, TetrominoeType.rightZ),
+            // new Tetromino(0, 9, TetrominoeType.leftL),
+            // new Tetromino(10, 11, TetrominoeType.rightL),
+            // new Tetromino(0, 14, TetrominoeType.soil),
         ]
         objs.forEach(n => {
             n.mGridMap = m
@@ -30,7 +30,7 @@ export class Scene extends GameObject {
             this.lastTime = now
         }
         const timeDelta = now - this.lastTime;
-        if (timeDelta >= 500) {
+        if (timeDelta >= 200) {
             this.lastTime = now
             let tetrominos = this.children.filter(n => n instanceof Tetromino)
             tetrominos= tetrominos.sort((a, b) => {

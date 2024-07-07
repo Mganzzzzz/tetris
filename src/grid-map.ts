@@ -34,9 +34,9 @@ export class GridMap extends GameObject {
             const {offsetX, offsetY} = evt
             const {x, y} = this.getcoordinateByOffset(offsetX, offsetY)
             const mosaic = this.mosaicMap.get(`${x}-${y}`)
-            if (mosaic) {
-                console.log('debug mosaic', mosaic)
-            }
+            // if (mosaic) {
+            //     console.log('debug mosaic', mosaic)
+            // }
         })
     }
 
