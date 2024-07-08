@@ -22,17 +22,17 @@ export class GridMap extends GameObject {
         // this.mosaicMap = new Map<string, Mosaic>();
     }
 
-    get rows() {
-        const ret = []
-        for (let i = 0; i < this.height; i++) {
-            let row = []
-            for (let j = 0; j < this.width; j++) {
-                row.push(this.get(j,i))
-            }
-            ret.push(row)
-        }
-        return ret
-    }
+    // get rows() {
+    //     const ret = []
+    //     for (let i = 0; i < this.height; i++) {
+    //         let row = []
+    //         for (let j = 0; j < this.width; j++) {
+    //             row.push(this.get(j,i))
+    //         }
+    //         ret.push(row)
+    //     }
+    //     return ret
+    // }
 
     init() {
 
@@ -40,16 +40,18 @@ export class GridMap extends GameObject {
         const step = Mosaic.size
         this.height = height / step
         this.width = width / step
-        for (let i = 0; i < width; i ++) {
-            const row:GridData[]  = []
-            for (let j = 0; j < height; j += step) {
-                const key = `${i}-${j}`
+        console.log('debug this.height, this.width', this.height, this.width)
+        for (let y = 0; y < this.height; y++) {
+            const row: GridData[] = []
+            for (let x = 0; x < this.width; x++) {
+                const key = `${x}-${y}`
                 const grid = new GridData()
                 row.push(grid)
                 this.mosaicMap.set(key, grid)
             }
             this.rows.push(row)
         }
+        console.log('debug this.rows', this.rows)
 
         this.ctx.registerEvent(GameEventType.mouse, (e) => {
             const evt = e.source as PointerEvent
@@ -71,34 +73,38 @@ export class GridMap extends GameObject {
     update() {
 
         if (this.parent instanceof Scene) {
-            this.mosaicMap.forEach((_, key) => {
-                const grid = this.mosaicMap.get(key)!
-                grid.data = null
-                this.mosaicMap.set(key, grid)
+            this.rows.forEach(row => {
+                row.forEach(n => n.data = null)
             })
+            // this.mosaicMap.forEach((_, key) => {
+            //     const grid = this.mosaicMap.get(key)!
+            //     grid.data = null
+            //     this.mosaicMap.set(key, grid)
+            // })
             this.parent.children.forEach((child) => {
                 if (child instanceof Tetromino) {
-                    this.updateMap(child.children)
+                    this.updateMap(child)
                 }
             })
         }
     }
 
-    updateMap(mosaics: Mosaic[]) {
-
+    updateMap(tetromino: Tetromino) {
+        const mosaics = tetromino.children
         mosaics.forEach((mosaic: Mosaic) => {
             const {indexX, indexY} = mosaic
-            const key = `${indexX}-${indexY}`
-            const grid = this.mosaicMap.get(key)!
+            const grid = this.rows[indexY + tetromino.indexY][indexX + tetromino.indexX]
+            // grid.data = mosaic
             grid.data = mosaic
-            this.mosaicMap.set(key, grid)
+            // this.mosaicMap.set(key, grid)
         })
     }
 
     get(indexX: number, indexY: number) {
-        const key = `${indexX}-${indexY}`
-        const grid = this.mosaicMap.get(key)
-        return grid?.data
+        return this.rows[indexX][indexY].data
+        // const key = `${indexX}-${indexY}`
+        // const grid = this.mosaicMap.get(key)
+        // return grid?.data
     }
 
     // onGround(mosaic: Mosaic) {
