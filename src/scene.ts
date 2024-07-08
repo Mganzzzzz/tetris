@@ -33,10 +33,10 @@ export class Scene extends GameObject {
         if (timeDelta >= 200) {
             this.lastTime = now
             let tetrominos = this.children.filter(n => n instanceof Tetromino)
-            tetrominos= tetrominos.sort((a, b) => {
-                if(a.bottom.indexY > b.bottom.indexY) {
+            tetrominos = tetrominos.sort((a, b) => {
+                if (a.bottom.indexY > b.bottom.indexY) {
                     return 1
-                } else if(a.bottom.indexY > b.bottom.indexY) {
+                } else if (a.bottom.indexY > b.bottom.indexY) {
                     return -1
                 } else {
                     return 0
@@ -48,6 +48,15 @@ export class Scene extends GameObject {
             })
             const map = this.children.find(n => n instanceof GridMap)
             map?.update()
+            if (map) {
+
+                const rows = map.rows
+                rows.forEach(row => {
+                    if(row.every(n => n)) {
+                        console.log('debug hit', )
+                    }
+                })
+            }
         }
     }
 }

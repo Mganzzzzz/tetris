@@ -97,7 +97,7 @@ export class Tetromino extends GameObject {
             [Direction.up, (a: Mosaic, b: Mosaic) => {
                 return a.indexY - b.indexY;
             }],
-            [Direction.left, (a: Mosaic, b: Mosaic) => {
+            [Direction.down, (a: Mosaic, b: Mosaic) => {
                 return b.indexY - a.indexY;
             }]
         ])

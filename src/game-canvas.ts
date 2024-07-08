@@ -72,23 +72,29 @@ export class GameCanvas implements GameCanvas {
     }
 
     bindEvent() {
-        window.addEventListener('keydown', (e) => {
-            this.triggerEvent(new GameEvent(GameEventType.keyboard, e))
+        let isKeyPressed = false;
+        window.addEventListener('keydown', () => {
+            isKeyPressed = true;
+        })
+        window.addEventListener('keyup', (e) => {
+            if (isKeyPressed) {
+                this.triggerEvent(new GameEvent(GameEventType.keyboard, e))
 
-
+                isKeyPressed = false;
+            }
         })
 
         if (this.canvas) {
             this.canvas.addEventListener('click', (e) => {
                 this.triggerEvent(new GameEvent(GameEventType.mouse, e))
             })
-              this.canvas.addEventListener('mousedown', (e) => {
+            this.canvas.addEventListener('mousedown', (e) => {
                 this.triggerEvent(new GameEvent(GameEventType.mouse, e))
             })
-              this.canvas.addEventListener('mouseup', (e) => {
+            this.canvas.addEventListener('mouseup', (e) => {
                 this.triggerEvent(new GameEvent(GameEventType.mouse, e))
             })
-              this.canvas.addEventListener('mouseleave', (e) => {
+            this.canvas.addEventListener('mouseleave', (e) => {
                 this.triggerEvent(new GameEvent(GameEventType.mouse, e))
             })
         }

@@ -3,7 +3,6 @@ import {GameObject} from "./game-object.ts";
 import {Scene} from "./scene.ts";
 import {Tetromino} from "./tetromino.ts";
 import {GameEventType} from "./event.ts";
-import {Color} from "./color.ts";
 
 export class GridMap extends GameObject {
     mosaicMap: Map<string, Mosaic | null> = new Map
@@ -14,6 +13,18 @@ export class GridMap extends GameObject {
         super()
         this.init()
         // this.mosaicMap = new Map<string, Mosaic>();
+    }
+
+    get rows() {
+        const ret = []
+        for (let i = 0; i < this.height; i++) {
+            let row = []
+            for (let j = 0; j < this.width; j++) {
+                row.push(this.get(j,i))
+            }
+            ret.push(row)
+        }
+        return ret
     }
 
     init() {
