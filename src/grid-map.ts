@@ -4,10 +4,17 @@ import {Scene} from "./scene.ts";
 import {Tetromino} from "./tetromino.ts";
 import {GameEventType} from "./event.ts";
 
+export class GridData {
+    public data: any = null
+    public offsetX = 0
+    public offsetY = 0
+}
+
 export class GridMap extends GameObject {
-    mosaicMap: Map<string, Mosaic | null> = new Map
+    mosaicMap: Map<string, GridData | null> = new Map
     width: number = 0
     height: number = 0
+    rows: Array<Array<GridData>> = []
 
     constructor() {
         super()
@@ -33,11 +40,15 @@ export class GridMap extends GameObject {
         const step = Mosaic.size
         this.height = height / step
         this.width = width / step
-        for (let i = 0; i < width; i += step) {
+        for (let i = 0; i < width; i ++) {
+            const row:GridData[]  = []
             for (let j = 0; j < height; j += step) {
                 const key = `${i}-${j}`
-                this.mosaicMap.set(key, null)
+                const grid = new GridData()
+                row.push(grid)
+                this.mosaicMap.set(key, grid)
             }
+            this.rows.push(row)
         }
 
         this.ctx.registerEvent(GameEventType.mouse, (e) => {
@@ -61,7 +72,9 @@ export class GridMap extends GameObject {
 
         if (this.parent instanceof Scene) {
             this.mosaicMap.forEach((_, key) => {
-                this.mosaicMap.set(key, null)
+                const grid = this.mosaicMap.get(key)!
+                grid.data = null
+                this.mosaicMap.set(key, grid)
             })
             this.parent.children.forEach((child) => {
                 if (child instanceof Tetromino) {
@@ -76,13 +89,16 @@ export class GridMap extends GameObject {
         mosaics.forEach((mosaic: Mosaic) => {
             const {indexX, indexY} = mosaic
             const key = `${indexX}-${indexY}`
-            this.mosaicMap.set(key, mosaic)
+            const grid = this.mosaicMap.get(key)!
+            grid.data = mosaic
+            this.mosaicMap.set(key, grid)
         })
     }
 
     get(indexX: number, indexY: number) {
         const key = `${indexX}-${indexY}`
-        return this.mosaicMap.get(key)
+        const grid = this.mosaicMap.get(key)
+        return grid?.data
     }
 
     // onGround(mosaic: Mosaic) {
