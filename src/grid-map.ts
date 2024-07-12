@@ -6,8 +6,8 @@ import {GameEventType} from "./event.ts";
 
 export class GridData {
     public data: any = null
-    public offsetX = 0
-    public offsetY = 0
+    constructor(public offsetX: number, public offsetY: number) {
+    }
 }
 
 export class GridMap extends GameObject {
@@ -45,7 +45,8 @@ export class GridMap extends GameObject {
             const row: GridData[] = []
             for (let x = 0; x < this.width; x++) {
                 const key = `${x}-${y}`
-                const grid = new GridData()
+                const grid = new GridData(x, y)
+
                 row.push(grid)
                 this.mosaicMap.set(key, grid)
             }
@@ -100,8 +101,11 @@ export class GridMap extends GameObject {
         })
     }
 
-    get<T>(indexX: number, indexY: number) {
-        return this.rows[indexX][indexY].data as T
+    get(indexX: number, indexY: number) {
+        if(indexX > this.width-1 || indexY > this.height-1){
+            return undefined
+        }
+        return this.rows[indexY][indexX]
         // const key = `${indexX}-${indexY}`
         // const grid = this.mosaicMap.get(key)
         // return grid?.data

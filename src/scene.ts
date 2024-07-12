@@ -16,7 +16,7 @@ export class Scene extends GameObject {
         const objs = [
             new Tetromino(0, m.height - 1, TetrominoeType.line),
             new Tetromino(4, m.height - 1, TetrominoeType.line),
-            new Tetromino(7, 10, TetrominoeType.square),
+            new Tetromino(8, 10, TetrominoeType.square),
             // new Tetromino(0, 23, TetrominoeType.leftZ),
             // new Tetromino(2, 5, TetrominoeType.rightZ),
             // new Tetromino(0, 9, TetrominoeType.leftL),

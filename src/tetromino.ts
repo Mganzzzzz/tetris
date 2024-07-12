@@ -119,10 +119,10 @@ export class Tetromino extends GameObject {
     }
 
     eliminateMosaic(m: Mosaic) {
-        if(this.children.includes(m)) {
+        if (this.children.includes(m)) {
             m.destory()
         }
-        if(this.children.length === 0) {
+        if (this.children.length === 0) {
             this.destory()
         }
     }
@@ -131,18 +131,43 @@ export class Tetromino extends GameObject {
     update() {
         super.update();
         this.detection()
-        if (!this.toBottom) {
+        if (this.canMove(Direction.down)) {
             this.indexY += 1
         }
     }
 
     canMove(d: Direction) {
-        const mapping  = new Map([
-            [Direction.down , (prevPostion: {indexX:number, indexY:number}) => {
-                return {indexX: prevPostion.indexX, indexY: prevPostion.indexY +1}
+        const mGridMap = this._mGridMap!
+
+        const mapping = new Map([
+            [Direction.down, (prevPosition: { indexX: number, indexY: number }) => {
+                return {indexX: prevPosition.indexX, indexY: prevPosition.indexY + 1}
             }]
         ])
-        const nextState = mapping.get(d)({indexX: this.indexX, })
+
+        const nextState = mapping.get(d)?.({
+            indexX: this.indexX,
+            indexY: this.indexY
+        })!
+        const nextGrids = this.children.map(m => {
+            const x = nextState.indexX + m.indexX
+            const y = nextState.indexY + m.indexY
+            const item = mGridMap.get(x, y)
+            return item
+        })
+        const ret = nextGrids.every(n => {
+            if(!n) {
+                return false
+            }
+            if(n.data === null){
+                return true
+            }
+            if(n.data.parent === this) {
+                return true
+            }
+            return false
+        })
+        return ret
     }
 
     detection() {
