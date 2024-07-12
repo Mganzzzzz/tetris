@@ -23,7 +23,7 @@ export class GameObject {
         if (this.parent) {
             const i = this.parent.children.findIndex(n => n.id === this.id);
             if (i >= 0) {
-                this.parent.children.slice(i, 1);
+                this.parent.children.splice(i, 1);
             }
         }
     }

@@ -100,8 +100,8 @@ export class GridMap extends GameObject {
         })
     }
 
-    get(indexX: number, indexY: number) {
-        return this.rows[indexX][indexY].data
+    get<T>(indexX: number, indexY: number) {
+        return this.rows[indexX][indexY].data as T
         // const key = `${indexX}-${indexY}`
         // const grid = this.mosaicMap.get(key)
         // return grid?.data

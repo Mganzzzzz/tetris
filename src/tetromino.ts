@@ -67,10 +67,8 @@ export class Tetromino extends GameObject {
     type: TetrominoeType
     direction: Direction = Direction.up
     children: Mosaic[] = []
-    onGround = false
     public _mGridMap: GridMap | null = null
     active = false
-    public leftGrids: Mosaic[] = [];
     public toBottom: boolean = false;
     public toLeft: boolean = false;
     public toRight: boolean = false;
@@ -120,6 +118,15 @@ export class Tetromino extends GameObject {
         return this.getEdge(Direction.down)
     }
 
+    eliminateMosaic(m: Mosaic) {
+        if(this.children.includes(m)) {
+            m.destory()
+        }
+        if(this.children.length === 0) {
+            this.destory()
+        }
+    }
+
 
     update() {
         super.update();
@@ -129,13 +136,17 @@ export class Tetromino extends GameObject {
         }
     }
 
+    canMove(d: Direction) {
+        const mapping  = new Map([
+            [Direction.down , (prevPostion: {indexX:number, indexY:number}) => {
+                return {indexX: prevPostion.indexX, indexY: prevPostion.indexY +1}
+            }]
+        ])
+        const nextState = mapping.get(d)({indexX: this.indexX, })
+    }
+
     detection() {
         const mGridMap = this._mGridMap!
-        this.leftGrids = this.children.map((n => {
-            const {indexX, indexY} = n
-            const grid = mGridMap.get(indexX, indexY + 1)
-            return grid
-        })).filter(m => m instanceof Mosaic)
         this.toBottom = (this.bottom.indexY + this.indexY) === mGridMap.height - 1
         this.toLeft = (this.left.indexX + this.indexX) === 0
         this.toRight = (this.right.indexX + this.indexX) === mGridMap.width - 1

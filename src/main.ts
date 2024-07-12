@@ -3,9 +3,10 @@ import {Scene} from "./scene.ts";
 import {GameCanvas} from "./game-canvas.ts";
 
 const setupCanvas = () => {
+    const scale =  localStorage.getItem('scale') || 1
     document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
   <div>
-    <canvas class="app" width="200" height="600"></canvas>
+    <canvas class="app" width="200" height="600" style="transform: scale(${scale});"></canvas>
   </div>
 `
 
