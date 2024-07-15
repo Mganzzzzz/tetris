@@ -58,17 +58,17 @@ export class Scene extends GameObject {
             const map = this.children.find(n => n instanceof GridMap)
             map?.update()
             if (map) {
-
-                const rows = map.rows
-                rows.forEach(row => {
-                    if (row.every(n => n.data)) {
-                        row.forEach(n => {
-                            const m = n.data as Mosaic
-                            const tetromino = m.parent!
-                            tetromino.eliminateMosaic(m)
-                        })
-                    }
-                })
+                if (tetrominos.every(n => n.freeze)) {
+                    map.rows.forEach(row => {
+                        if (row.every(n => n.data)) {
+                            row.forEach(n => {
+                                const m = n.data as Mosaic
+                                const tetromino = m.parent!
+                                tetromino.eliminateMosaic(m)
+                            })
+                        }
+                    })
+                }
             }
         }
     }

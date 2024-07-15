@@ -39,4 +39,5 @@ export class GameObject {
             child.draw()
         })
     }
+
 }

@@ -52,7 +52,6 @@ export class GridMap extends GameObject {
             }
             this.rows.push(row)
         }
-        console.log('debug this.rows', this.rows)
 
         this.ctx.registerEvent(GameEventType.mouse, (e) => {
             const evt = e.source as PointerEvent
@@ -69,6 +68,13 @@ export class GridMap extends GameObject {
         let x = Math.floor(offsetX / Mosaic.size)
         let y = Math.floor(offsetY / Mosaic.size)
         return {x, y}
+    }
+
+    get mosics() {
+        const grids=  this.rows.flat()
+
+        const mosics = grids.filter(n => n.data).map(n =>n.data)
+        return mosics
     }
 
     update() {

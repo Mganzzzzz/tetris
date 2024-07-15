@@ -69,9 +69,9 @@ export class Tetromino extends GameObject {
     children: Mosaic[] = []
     public _mGridMap: GridMap | null = null
     active = false
-    public toBottom: boolean = false;
-    public toLeft: boolean = false;
-    public toRight: boolean = false;
+    public canGoDown: boolean = false;
+    public canGoLeft: boolean = false;
+    public canGoRight: boolean = false;
 
     constructor(public indexX: number, public indexY: number, type: TetrominoeType = TetrominoeType.line) {
         super()
@@ -118,6 +118,14 @@ export class Tetromino extends GameObject {
         return this.getEdge(Direction.down)
     }
 
+    get freeze() {
+        return [
+            this.canGoDown,
+            this.canGoLeft,
+            this.canGoRight,
+        ].every(n => !n);
+    }
+
     eliminateMosaic(m: Mosaic) {
         if (this.children.includes(m)) {
             m.destory()
@@ -148,7 +156,10 @@ export class Tetromino extends GameObject {
         const nextState = mapping.get(d)?.({
             indexX: this.indexX,
             indexY: this.indexY
-        })!
+        })
+        if(!nextState){
+            return false
+        }
         const nextGrids = this.children.map(m => {
             const x = nextState.indexX + m.indexX
             const y = nextState.indexY + m.indexY
@@ -171,10 +182,10 @@ export class Tetromino extends GameObject {
     }
 
     detection() {
-        const mGridMap = this._mGridMap!
-        this.toBottom = (this.bottom.indexY + this.indexY) === mGridMap.height - 1
-        this.toLeft = (this.left.indexX + this.indexX) === 0
-        this.toRight = (this.right.indexX + this.indexX) === mGridMap.width - 1
+        // const mGridMap = this._mGridMap!
+        this.canGoDown = this.canMove(Direction.down)
+        this.canGoLeft = this.canMove(Direction.left)
+        this.canGoRight = this.canMove(Direction.right)
     }
 
     init() {
@@ -211,12 +222,12 @@ export class Tetromino extends GameObject {
                         //
                     }],
                     [Direction.left, () => {
-                        if (!this.toLeft) {
+                        if (!this.canGoLeft) {
                             this.indexX--
                         }
                     }],
                     [Direction.right, () => {
-                        if (!this.toRight) {
+                        if (!this.canGoRight) {
                             this.indexX++
                         }
                     }],
